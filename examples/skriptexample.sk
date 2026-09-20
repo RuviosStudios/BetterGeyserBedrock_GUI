@@ -1,26 +1,34 @@
-# BGB_GUI Skript-Beispiel (RuviosStudios)
-# Auf den Server: plugins/Skript/scripts/bgb_example.sk
+# BGB_GUI Skript-Beispiel
 # Braucht: Skript + BGB_GUI + Geyser/Floodgate
 # Java/Bedrock prüft BGB_GUI nicht — Forms gehen nur an Bedrock-Spieler.
 #
-# Wichtig: Jedes Formular braucht eine eigene ID (with id "..."),
-# sonst knallen gleiche Button-Labels (z.B. "Abbruch") in allen Events durcheinander.
+# Wichtig: Jedes Formular braucht eine eigene ID (with id "...")
+
+import:
+    org.geysermc.floodgate.api.FloodgateApi
 
 options:
     prefix: &8[&6BGB_GUI&8]&r
+
+
+function isBedrock(p: player) :: boolean:
+    return FloodgateApi.getInstance().isFloodgatePlayer(uuid of {_p})
 
 
 # Simple ohne Buttons: nur Titel + Text (schließen über X)
 command /bgbexample:
     permission: bgbgui.example
     trigger:
-        open simple form with id "textexample" titled "TextExample" with description "Test Text" to player
+        if isBedrock(player) is true:
+            open simple form with id "textexample" titled "TextExample" with description "Test Text" to player
+
         
 # --- Simple Form: Shop ---
 command /bgbshop:
     permission: bgbgui.example
     trigger:
-        open simple form with id "shop" titled "Shop" with description "Was möchtest du?" with buttons "Diamant kaufen", "Diamant verkaufen" and "Abbruch" to player
+        if isBedrock(player) is true:
+            open simple form with id "shop" titled "Shop" with description "Was möchtest du?" with buttons "Diamant kaufen", "Diamant verkaufen" and "Abbruch" to player
 
 on bgb simple form with id "shop":
     if form button is "Diamant kaufen":

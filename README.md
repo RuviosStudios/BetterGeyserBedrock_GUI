@@ -1,22 +1,36 @@
-# BGB_GUI Beispiele
+# BGB_GUI
 
 **RuviosStudios** · [ruvios.net](https://ruvios.net) · Ersteller: Mangur7090
 
-Andere Plugins übergeben nur Daten (Titel, Text, Buttons, Felder) und Callbacks. **Java/Bedrock-Check bleibt im Verbraucher-Plugin**, nicht in BGB_GUI. Fehlt Floodgate oder schlägt der Send fehl, gibt `BgbGui` still `false` zurück — keine Chat-Nachricht.
+Paper/Folia-Plugin: andere Plugins und Skripte öffnen Geyser/Floodgate-Forms (Simple, Modal, Custom) über eine gemeinsame API. **Java/Bedrock-Check bleibt im Verbraucher**, nicht in BGB_GUI. Fehlt Floodgate oder schlägt der Send fehl, gibt `BgbGui` still `false` zurück — keine Chat-Nachricht.
 
 JAR: `build/libs/bgb_gui-0.1.0.jar`
 
+## Examples
+
+Vollständige Copy-Paste-Beispiele (Shop, Heilen, Profil, Floodgate-Check):
+
+| Sprache | Datei |
+|---|---|
+| Skript | [`examples/skriptexample.sk`](examples/skriptexample.sk) |
+| Kotlin | [`examples/kotlinexample.kt`](examples/kotlinexample.kt) |
+| Java | [`examples/javaexample.java`](examples/javaexample.java) |
+
+Skript: Datei nach `plugins/Skript/scripts/` (Skript + BGB_GUI + Floodgate; für `import:` zusätzlich [skript-reflect](https://github.com/SkriptLang/skript-reflect)). Kotlin/Java: Snippets in euer Plugin kopieren, nicht als eigene Main-Klasse kompilieren.
+
 ## Einbinden
 
-**Kotlin / Java** — Plugin hängt von BGB_GUI ab und kompiliert gegen die JAR:
+**Kotlin / Java** — Plugin hängt von BGB_GUI ab und kompiliert gegen die JAR.
 
 `plugin.yml`:
+
 ```yaml
 softdepend:
   - BGB_GUI
 ```
 
 `paper-plugin.yml` (Paper-Plugin):
+
 ```yaml
 dependencies:
   server:
@@ -27,17 +41,16 @@ dependencies:
 ```
 
 `build.gradle.kts`:
+
 ```kotlin
 dependencies {
     compileOnly(files("../GeyserBedrockGUI/build/libs/bgb_gui-0.1.0.jar"))
 }
 ```
 
+Import: `net.ruvios.bgbgui.api.BgbGui` (plus `FormField` in Java).
+
 **Skript** — BGB_GUI und Skript auf dem Server, dann eine `.sk`-Datei. Kein compileOnly.
-
-Import für Kotlin/Java: `net.ruvios.bgbgui.api.BgbGui` (plus `FormField` in Java).
-
----
 
 ## Kotlin
 
@@ -72,8 +85,6 @@ BgbGui.custom(player, "Einstellungen") {
 ```
 
 `onButton1` / `onButton2` sind Aliase für `onYes` / `onNo`. `FormValues`: `string`/`int`/`bool`/`float` oder `getString`/`getInt`/`getBoolean`/`getFloat`.
-
----
 
 ## Java
 
@@ -112,8 +123,6 @@ BgbGui.custom(player, "Einstellungen", fields, (FormValues v) -> {
 ```
 
 Callbacks: `BiConsumer<Integer, String>` + `Runnable` (simple), `Runnable` (modal), `Consumer<FormValues>` + `Runnable` (custom). OnClose-Parameter dürfen weggelassen werden.
-
----
 
 ## Skript
 

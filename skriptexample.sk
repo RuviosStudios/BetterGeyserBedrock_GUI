@@ -1,0 +1,95 @@
+# BGB_GUI Skript-Beispiel (RuviosStudios)
+# Auf den Server: plugins/Skript/scripts/bgb_example.sk
+# Braucht: Skript + BGB_GUI + Geyser/Floodgate
+# Java/Bedrock prüft BGB_GUI nicht — Forms gehen nur an Bedrock-Spieler.
+#
+# Wichtig: Jedes Formular braucht eine eigene ID (with id "..."),
+# sonst knallen gleiche Button-Labels (z.B. "Abbruch") in allen Events durcheinander.
+
+options:
+    prefix: &8[&6BGB_GUI&8]&r
+
+
+# Simple ohne Buttons: nur Titel + Text (schließen über X)
+command /bgbexample:
+    permission: bgbgui.example
+    trigger:
+        open simple form with id "textexample" titled "TextExample" with description "Test Text" to player
+        
+# --- Simple Form: Shop ---
+command /bgbshop:
+    permission: bgbgui.example
+    trigger:
+        open simple form with id "shop" titled "Shop" with description "Was möchtest du?" with buttons "Diamant kaufen", "Diamant verkaufen" and "Abbruch" to player
+
+on bgb simple form with id "shop":
+    if form button is "Diamant kaufen":
+        give 1 diamond to player
+        send "{@prefix} &aDu hast einen Diamanten bekommen." to player
+    else if form button is "Diamant verkaufen":
+        if player has 1 diamond:
+            remove 1 diamond from player's inventory
+            give 5 gold ingot to player
+            send "{@prefix} &e1 Diamant verkauft, 5 Goldbarren erhalten." to player
+        else:
+            send "{@prefix} &cDu hast keinen Diamanten." to player
+    else:
+        send "{@prefix} &7Shop geschlossen." to player
+
+# --- Modal Form: Heilen ---
+command /bgbheal:
+    permission: bgbgui.example
+    trigger:
+        open modal form with id "heal" titled "Heilen?" with description "HP und Hunger voll machen?" with yes "Ja, heilen" and no "Nein" to player
+
+on bgb modal form with id "heal":
+    if form yes is true:
+        heal player
+        feed player
+        apply regeneration 1 to player for 5 seconds
+        send "{@prefix} &aDu wurdest geheilt." to player
+        send title "&aGeheilt" with subtitle "&7volles Leben & Hunger" to player for 2 seconds
+    else:
+        send "{@prefix} &7Nicht geheilt." to player
+
+# --- Custom Form: Name + Stadt anwenden ---
+command /bgbprofil:
+    permission: bgbgui.example
+    trigger:
+        open custom form with id "profil" titled "Profil" with inputs "Name" and "Stadt" to player
+
+on bgb custom form with id "profil":
+    set {_name} to form value of "Name"
+    set {_stadt} to form value of "Stadt"
+
+    if {_name} is not set:
+        send "{@prefix} &cBitte einen Namen eintragen." to player
+        stop
+    if {_name} is "":
+        send "{@prefix} &cBitte einen Namen eintragen." to player
+        stop
+    if {_stadt} is not set:
+        send "{@prefix} &cBitte eine Stadt eintragen." to player
+        stop
+    if {_stadt} is "":
+        send "{@prefix} &cBitte eine Stadt eintragen." to player
+        stop
+
+    set {bgb::name::%uuid of player%} to {_name}
+    set {bgb::stadt::%uuid of player%} to {_stadt}
+
+    set display name of player to "&e%{_name}%"
+    set tab list name of player to "&e%{_name}%"
+
+    give 1 paper named "&6Visitenkarte" with lore "&7Name: &f%{_name}%" and "&7Stadt: &f%{_stadt}%" to player
+
+    send title "&e%{_name}%" with subtitle "&7aus &f%{_stadt}%" to player for 3 seconds
+    send "{@prefix} &aProfil gesetzt: &e%{_name}% &7aus &e%{_stadt}%&a. Nickname und Visitenkarte sind aktiv." to player
+
+command /bgbmeinprofil:
+    permission: bgbgui.example
+    trigger:
+        if {bgb::name::%uuid of player%} is not set:
+            send "{@prefix} &cNoch kein Profil. Nutze &e/bgbprofil" to player
+            stop
+        send "{@prefix} &fName: &e%{bgb::name::%uuid of player%}%&f | Stadt: &e%{bgb::stadt::%uuid of player%}%" to player

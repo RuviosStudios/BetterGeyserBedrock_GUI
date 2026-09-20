@@ -1,0 +1,25 @@
+name: BGB_GUI
+version: '${version}'
+main: net.ruvios.bgbgui.BgbGuiPlugin
+bootstrapper: net.ruvios.bgbgui.BgbGuiBootstrap
+api-version: '26.2'
+folia-supported: true
+authors:
+  - Mangur7090
+  - RuviosStudios
+website: https://ruvios.net
+description: Bedrock-GUI für Geyser-Spieler. Made by RuviosStudios.
+dependencies:
+  server:
+    floodgate:
+      load: BEFORE
+      required: false
+      join-classpath: true
+    Geyser-Spigot:
+      load: BEFORE
+      required: false
+      join-classpath: true
+    Skript:
+      load: BEFORE
+      required: false
+      join-classpath: true

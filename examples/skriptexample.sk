@@ -39,7 +39,7 @@ command /bgbshop:
                 description: "Was möchtest du?"
                 button: "Diamant kaufen" with image "textures/items/diamond"
                 button: "Diamant verkaufen" with image "textures/items/gold_ingot"
-                button: "Hilfe" with image "https://avatars.githubusercontent.com/u/52673035?s=200&v=4"
+                button: "Hilfe" with image "https://www.skydinse.net/skydinse/logo.png"
                 button: "Abbruch"
 
 on bgb simple form with id "shop":

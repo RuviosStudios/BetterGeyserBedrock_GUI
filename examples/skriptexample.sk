@@ -1,8 +1,9 @@
 # BGB_GUI Skript-Beispiel
-# Braucht: Skript + BGB_GUI + Geyser/Floodgate
+# Braucht: Skript + BGB_GUI + Geyser/Floodgate (+ skript-reflect für import:)
 # Java/Bedrock prüft BGB_GUI nicht — Forms gehen nur an Bedrock-Spieler.
 #
-# Wichtig: Jedes Formular braucht eine eigene ID (with id "...")
+# Empfohlen: Multiline-Sections (Einrückung). Einzeiler bleiben gültig.
+# Wichtig: Jedes Formular braucht eine eigene ID (id: "...")
 
 import:
     org.geysermc.floodgate.api.FloodgateApi
@@ -20,15 +21,26 @@ command /bgbexample:
     permission: bgbgui.example
     trigger:
         if isBedrock(player) is true:
-            open simple form with id "textexample" titled "TextExample" with description "Test Text" to player
+            open simple form to player:
+                id: "textexample"
+                title: "TextExample"
+                description: "Test Text"
 
-        
 # --- Simple Form: Shop ---
+# button: "Text" [with image "url|path"]
+# http(s) = URL, sonst Resource-Pack-Pfad
 command /bgbshop:
     permission: bgbgui.example
     trigger:
         if isBedrock(player) is true:
-            open simple form with id "shop" titled "Shop" with description "Was möchtest du?" with buttons "Diamant kaufen", "Diamant verkaufen" and "Abbruch" to player
+            open simple form to player:
+                id: "shop"
+                title: "Shop"
+                description: "Was möchtest du?"
+                button: "Diamant kaufen" with image "textures/items/diamond"
+                button: "Diamant verkaufen" with image "textures/items/gold_ingot"
+                button: "Hilfe" with image "https://avatars.githubusercontent.com/u/52673035?s=200&v=4"
+                button: "Abbruch"
 
 on bgb simple form with id "shop":
     if form button is "Diamant kaufen":
@@ -41,6 +53,8 @@ on bgb simple form with id "shop":
             send "{@prefix} &e1 Diamant verkauft, 5 Goldbarren erhalten." to player
         else:
             send "{@prefix} &cDu hast keinen Diamanten." to player
+    else if form button is "Hilfe":
+        send "{@prefix} &7Kaufen kostet nichts, verkaufen bringt Gold." to player
     else:
         send "{@prefix} &7Shop geschlossen." to player
 
@@ -48,7 +62,13 @@ on bgb simple form with id "shop":
 command /bgbheal:
     permission: bgbgui.example
     trigger:
-        open modal form with id "heal" titled "Heilen?" with description "HP und Hunger voll machen?" with yes "Ja, heilen" and no "Nein" to player
+        if isBedrock(player) is true:
+            open modal form to player:
+                id: "heal"
+                title: "Heilen?"
+                description: "HP und Hunger voll machen?"
+                yes: "Ja, heilen"
+                no: "Nein"
 
 on bgb modal form with id "heal":
     if form yes is true:
@@ -64,7 +84,12 @@ on bgb modal form with id "heal":
 command /bgbprofil:
     permission: bgbgui.example
     trigger:
-        open custom form with id "profil" titled "Profil" with inputs "Name" and "Stadt" to player
+        if isBedrock(player) is true:
+            open custom form to player:
+                id: "profil"
+                title: "Profil"
+                input: "Name"
+                input: "Stadt"
 
 on bgb custom form with id "profil":
     set {_name} to form value of "Name"

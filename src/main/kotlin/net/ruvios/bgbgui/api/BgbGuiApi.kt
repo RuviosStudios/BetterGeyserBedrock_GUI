@@ -8,7 +8,7 @@ internal interface BgbGuiApi {
         player: Player,
         title: String,
         content: String,
-        buttons: List<String>,
+        buttons: List<FormButton>,
         onSelect: (Int, String) -> Unit = { _, _ -> },
         onClose: () -> Unit = {},
     ): Boolean

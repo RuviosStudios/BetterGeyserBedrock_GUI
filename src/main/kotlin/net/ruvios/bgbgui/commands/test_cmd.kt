@@ -4,6 +4,7 @@ import com.mojang.brigadier.Command
 import io.papermc.paper.command.brigadier.Commands
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
 import net.ruvios.bgbgui.api.BgbGui
+import net.ruvios.bgbgui.api.FormButton
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -53,9 +54,9 @@ object TestCmd {
             player,
             "BGB_GUI Simple",
             "Wähle einen Button.",
-            "Erster",
-            "Zweiter",
-            "Dritter",
+            FormButton.url("Erster", "https://avatars.githubusercontent.com/u/52673035?s=200&v=4"),
+            FormButton.path("Zweiter", "textures/i/glyph_world_template.png"),
+            FormButton.of("Dritter"),
             onClose = {
                 player.sendRichMessage("<gray>Simple-Form geschlossen.")
             },

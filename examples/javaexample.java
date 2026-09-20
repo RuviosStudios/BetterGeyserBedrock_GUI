@@ -3,6 +3,7 @@
 // Import: net.ruvios.bgbgui.api.BgbGui und FormField
 
 import net.ruvios.bgbgui.api.BgbGui;
+import net.ruvios.bgbgui.api.FormButton;
 import net.ruvios.bgbgui.api.FormField;
 import net.ruvios.bgbgui.api.FormValues;
 import org.bukkit.Material;
@@ -36,11 +37,16 @@ public final class JavaExample {
         if (!isBedrock(player)) {
             return;
         }
-        BgbGui.simple(
+        BgbGui.simpleButtons(
             player,
             "Shop",
             "Was möchtest du?",
-            List.of("Diamant kaufen", "Diamant verkaufen", "Abbruch"),
+            List.of(
+                FormButton.path("Diamant kaufen", "textures/items/diamond"),
+                FormButton.path("Diamant verkaufen", "textures/items/gold_ingot"),
+                FormButton.url("Hilfe", "https://avatars.githubusercontent.com/u/52673035?s=200&v=4"),
+                FormButton.of("Abbruch")
+            ),
             (index, label) -> {
                 switch (label) {
                     case "Diamant kaufen" -> {
@@ -56,6 +62,7 @@ public final class JavaExample {
                             player.sendMessage("§8[§6BGB_GUI§8]§r §cDu hast keinen Diamanten.");
                         }
                     }
+                    case "Hilfe" -> player.sendMessage("§8[§6BGB_GUI§8]§r §7Kaufen kostet nichts, verkaufen bringt Gold.");
                     default -> player.sendMessage("§8[§6BGB_GUI§8]§r §7Shop geschlossen.");
                 }
             },

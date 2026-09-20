@@ -3,6 +3,7 @@
 // Import: net.ruvios.bgbgui.api.BgbGui
 
 import net.ruvios.bgbgui.api.BgbGui
+import net.ruvios.bgbgui.api.FormButton
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -18,7 +19,7 @@ private fun isBedrock(player: Player): Boolean {
 
 fun openTextExample(player: Player) {
     if (!isBedrock(player)) return
-    BgbGui.simple(player, "TextExample", "Test Text", emptyList(), id = "textexample")
+    BgbGui.simple(player, "TextExample", "Test Text", emptyList<String>(), id = "textexample")
 }
 
 fun openShop(player: Player) {
@@ -27,9 +28,10 @@ fun openShop(player: Player) {
         player,
         "Shop",
         "Was möchtest du?",
-        "Diamant kaufen",
-        "Diamant verkaufen",
-        "Abbruch",
+        FormButton.path("Diamant kaufen", "textures/items/diamond"),
+        FormButton.path("Diamant verkaufen", "textures/items/gold_ingot"),
+        FormButton.url("Hilfe", "https://avatars.githubusercontent.com/u/52673035?s=200&v=4"),
+        FormButton.of("Abbruch"),
         id = "shop",
     ) { _, label ->
         when (label) {
@@ -46,6 +48,7 @@ fun openShop(player: Player) {
                     player.sendMessage("§8[§6BGB_GUI§8]§r §cDu hast keinen Diamanten.")
                 }
             }
+            "Hilfe" -> player.sendMessage("§8[§6BGB_GUI§8]§r §7Kaufen kostet nichts, verkaufen bringt Gold.")
             else -> player.sendMessage("§8[§6BGB_GUI§8]§r §7Shop geschlossen.")
         }
     }

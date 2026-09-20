@@ -21,7 +21,7 @@ object BgbGui {
         onClose: () -> Unit = {},
         onSelect: (Int, String) -> Unit = { _, _ -> },
     ): Boolean {
-        return openSimple(player, title, content, buttons.toList(), id, onSelect, onClose)
+        return openSimple(player, title, content, buttons.map { FormButton.of(it) }, id, onSelect, onClose)
     }
 
     @JvmSynthetic
@@ -30,6 +30,33 @@ object BgbGui {
         title: String,
         content: String,
         buttons: List<String>,
+        id: String? = null,
+        onClose: () -> Unit = {},
+        onSelect: (Int, String) -> Unit = { _, _ -> },
+    ): Boolean {
+        return openSimple(player, title, content, buttons.map { FormButton.of(it) }, id, onSelect, onClose)
+    }
+
+    @JvmSynthetic
+    fun simple(
+        player: Player,
+        title: String,
+        content: String,
+        vararg buttons: FormButton,
+        id: String? = null,
+        onClose: () -> Unit = {},
+        onSelect: (Int, String) -> Unit = { _, _ -> },
+    ): Boolean {
+        return openSimple(player, title, content, buttons.toList(), id, onSelect, onClose)
+    }
+
+    @JvmSynthetic
+    @JvmName("simpleWithButtons")
+    fun simple(
+        player: Player,
+        title: String,
+        content: String,
+        buttons: List<FormButton>,
         id: String? = null,
         onClose: () -> Unit = {},
         onSelect: (Int, String) -> Unit = { _, _ -> },
@@ -45,6 +72,29 @@ object BgbGui {
         title: String,
         content: String,
         buttons: List<String>,
+        onSelect: BiConsumer<Int, String>? = null,
+        onClose: Runnable? = null,
+        id: String? = null,
+    ): Boolean {
+        return openSimple(
+            player,
+            title,
+            content,
+            buttons.map { FormButton.of(it) },
+            id,
+            { index, label -> onSelect?.accept(index, label) },
+            { onClose?.run() },
+        )
+    }
+
+    @JvmStatic
+    @JvmOverloads
+    @JvmName("simpleButtons")
+    fun simpleButtonsJava(
+        player: Player,
+        title: String,
+        content: String,
+        buttons: List<FormButton>,
         onSelect: BiConsumer<Int, String>? = null,
         onClose: Runnable? = null,
         id: String? = null,
@@ -152,7 +202,7 @@ object BgbGui {
         player: Player,
         title: String,
         content: String,
-        buttons: List<String>,
+        buttons: List<FormButton>,
         id: String?,
         onSelect: (Int, String) -> Unit,
         onClose: () -> Unit,

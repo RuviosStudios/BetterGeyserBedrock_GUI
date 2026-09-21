@@ -1,5 +1,6 @@
 package net.ruvios.bgbgui.utils
 
+import net.ruvios.bgbgui.BgbGuiPlugin
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import org.geysermc.cumulus.form.util.FormBuilder
@@ -22,15 +23,29 @@ internal fun sendForm(
 ): Boolean {
     val api = try {
         FloodgateApi.getInstance()
-    } catch (_: Throwable) {
+    } catch (t: Throwable) {
+        if (BgbGuiPlugin.loaded()) {
+            BgbGuiPlugin.instance.logger.warning("FloodgateApi nicht verfügbar: ${t.message}")
+        }
         return false
     }
     if (player.isOnline.not()) {
         return false
     }
     return try {
-        api.sendForm(player.uniqueId, builder)
-    } catch (_: Throwable) {
+        val ok = api.sendForm(player.uniqueId, builder)
+        if (!ok && BgbGuiPlugin.loaded()) {
+            BgbGuiPlugin.instance.logger.warning(
+                "Floodgate sendForm=false für ${player.name} (${player.uniqueId})",
+            )
+        }
+        ok
+    } catch (t: Throwable) {
+        if (BgbGuiPlugin.loaded()) {
+            BgbGuiPlugin.instance.logger.warning(
+                "Floodgate sendForm Exception für ${player.name}: ${t.message}",
+            )
+        }
         false
     }
 }

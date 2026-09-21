@@ -19,6 +19,8 @@ class SecOpenSimpleForm : Section() {
     private var title: Expression<String>? = null
     private var description: Expression<String>? = null
     private val buttons = mutableListOf<Pair<Expression<String>, Expression<String>?>>()
+    private var buttonsList: Expression<String>? = null
+    private var imagesList: Expression<String>? = null
 
     override fun init(
         exprs: Array<Expression<*>>,
@@ -58,6 +60,12 @@ class SecOpenSimpleForm : Section() {
                     true
                 }
                 "button" -> {
+                    if (buttonsList != null) {
+                        Skript.error(
+                            "Nicht 'button:' und 'buttons:' zusammen nutzen (Zeile ${node.line})",
+                        )
+                        return@forEachEntry false
+                    }
                     val parsed = SecFormHelpers.parseButtonValue(value)
                     if (parsed == null) {
                         Skript.error(
@@ -66,6 +74,28 @@ class SecOpenSimpleForm : Section() {
                         return@forEachEntry false
                     }
                     buttons += parsed
+                    true
+                }
+                "buttons" -> {
+                    if (buttons.isNotEmpty()) {
+                        Skript.error(
+                            "Nicht 'button:' und 'buttons:' zusammen nutzen (Zeile ${node.line})",
+                        )
+                        return@forEachEntry false
+                    }
+                    buttonsList = SecFormHelpers.parseStringExpression(value)
+                    if (buttonsList == null) {
+                        Skript.error("Ungültige buttons in Zeile ${node.line}: $value")
+                        return@forEachEntry false
+                    }
+                    true
+                }
+                "images", "image" -> {
+                    imagesList = SecFormHelpers.parseStringExpression(value)
+                    if (imagesList == null) {
+                        Skript.error("Ungültige images in Zeile ${node.line}: $value")
+                        return@forEachEntry false
+                    }
                     true
                 }
                 else -> {
@@ -81,6 +111,10 @@ class SecOpenSimpleForm : Section() {
             Skript.error("simple form braucht 'title: \"...\"'")
             return false
         }
+        if (imagesList != null && buttonsList == null && buttons.isEmpty()) {
+            Skript.error("images: braucht buttons: oder button:-Zeilen")
+            return false
+        }
         return true
     }
 
@@ -90,10 +124,19 @@ class SecOpenSimpleForm : Section() {
         if (target != null && heading != null) {
             val text = description?.getSingle(event) ?: ""
             val formId = id?.getSingle(event)
-            val entries = buttons.map { (labelExpr, imageExpr) ->
-                val label = labelExpr.getSingle(event) ?: ""
-                val image = imageExpr?.getSingle(event)
-                FormButton.auto(label, image)
+            val icons = imagesList?.getArray(event)?.map { it.toString() }.orEmpty()
+            val entries = when {
+                buttonsList != null -> {
+                    val labels = buttonsList!!.getArray(event).map { it.toString() }
+                    labels.mapIndexed { i, label -> FormButton.auto(label, icons.getOrNull(i)) }
+                }
+                else -> {
+                    buttons.mapIndexed { i, (labelExpr, imageExpr) ->
+                        val label = labelExpr.getSingle(event) ?: ""
+                        val image = imageExpr?.getSingle(event) ?: icons.getOrNull(i)
+                        FormButton.auto(label, image)
+                    }
+                }
             }
             BgbGui.simple(target, heading, text, entries, id = formId)
         }

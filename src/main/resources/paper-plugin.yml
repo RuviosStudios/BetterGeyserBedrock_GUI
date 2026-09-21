@@ -2,7 +2,7 @@ name: BGB_GUI
 version: '${version}'
 main: net.ruvios.bgbgui.BgbGuiPlugin
 bootstrapper: net.ruvios.bgbgui.BgbGuiBootstrap
-api-version: '26.2'
+api-version: '1.21.11'
 folia-supported: true
 authors:
   - Mangur7090

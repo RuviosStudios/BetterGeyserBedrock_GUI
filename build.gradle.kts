@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "net.ruvios"
-version = "0.1.0"
+version = "0.1.1"
 
 base {
     archivesName.set("bgb_gui")
@@ -20,7 +20,8 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:26.2.build.+")
+    // 1.21.11-API + Java 21 → läuft auf 1.21.11 und neuer (auch Paper 26.2)
+    compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
     compileOnly("org.geysermc.floodgate:api:2.2.4-SNAPSHOT")
     compileOnly("com.github.SkriptLang:Skript:2.12.2") {
         isTransitive = false
@@ -29,20 +30,21 @@ dependencies {
 }
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(25))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 }
 
 kotlin {
-    jvmToolchain(25)
+    jvmToolchain(21)
     compilerOptions {
         javaParameters.set(true)
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
     }
 }
 
 tasks {
     withType<JavaCompile>().configureEach {
         options.encoding = "UTF-8"
-        options.release.set(25)
+        options.release.set(21)
     }
 
     processResources {

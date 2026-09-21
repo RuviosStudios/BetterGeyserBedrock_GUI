@@ -39,9 +39,22 @@ open simple form to player:
 | `title` / `titel` | ja | Fenstertitel |
 | `id` | nein | sonst = Titel |
 | `description` / `desc` / `content` / `beschreibung` | nein | Text über den Buttons |
-| `button` | nein | optional `with image "..."` |
+| `button` | nein | optional `with image "..."`; mehrere Zeilen |
+| `buttons` | nein | Liste, z. B. `{_buttons::*}` (nicht zusammen mit `button:`) |
+| `images` / `image` | nein | parallel zu `buttons:` / `button:` (Index) |
 
-Bilder: `http://` / `https://` → URL, sonst Resource-Pack-Pfad. Ohne `button:` nur Titel + Text.
+Bilder: `http://` / `https://` → URL, sonst Resource-Pack-Pfad. Ohne `button:`/`buttons:` nur Titel + Text.
+
+Dynamische Menüs (Navigator):
+
+```skript
+open simple form to {_player}:
+    id: "navigator"
+    title: "Navigator"
+    description: "Wähle eine Option"
+    buttons: {_buttons::*}
+    images: {_images::*}
+```
 
 ### Modal
 

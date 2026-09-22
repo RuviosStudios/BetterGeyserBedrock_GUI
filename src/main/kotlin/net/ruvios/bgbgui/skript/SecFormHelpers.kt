@@ -20,18 +20,22 @@ internal object SecFormHelpers {
     }
 
     fun parseButtonValue(raw: String): Pair<Expression<String>, Expression<String>?>? {
-        val result = SkriptParser.parse(
-            raw.trim(),
-            "%string% [with [the] image %string%]",
-            parseFlags,
-            ParseContext.DEFAULT,
-        ) ?: return null
+        val result = parseResult(raw, "%string% [with [the] image %string%]") ?: return null
         val exprs = result.exprs ?: return null
         @Suppress("UNCHECKED_CAST")
         val label = exprs.getOrNull(0) as? Expression<String> ?: return null
         @Suppress("UNCHECKED_CAST")
         val image = exprs.getOrNull(1) as? Expression<String>
         return label to image
+    }
+
+    fun parseResult(raw: String, pattern: String): SkriptParser.ParseResult? {
+        return SkriptParser.parse(
+            raw.trim(),
+            pattern,
+            parseFlags,
+            ParseContext.DEFAULT,
+        )
     }
 
     fun forEachEntry(

@@ -81,13 +81,28 @@ Keine Button-Bilder (Cumulus/Modal).
 
 ```skript
 open custom form to player:
-    id: "profil"
-    title: "Profil"
-    input: "Name"
-    input: "Stadt"
+    id: "settings"
+    title: "Einstellungen"
+    label: "Bitte ausfüllen"
+    input: "name" labeled "Name" with placeholder "Spieler"
+    dropdown: "color" labeled "Farbe" with options "Rot", "Grün" and "Blau"
+    toggle: "notify" labeled "Benachrichtigungen" with default true
+    slider: "volume" labeled "Lautstärke" from 0 to 10 with default 5
 ```
 
-Nur Text-Inputs. Feld-ID = Label-Text. Keine Dropdowns/Slider in Skript (dafür Kotlin/Java).
+Kurzform für Inputs: `input: "Name"` → Feld-ID = Label = `"Name"`.
+
+| Eintrag | Pflicht | Hinweis |
+|---|---|---|
+| `title` / `titel` | ja | Fenstertitel |
+| `id` | nein | sonst = Titel |
+| `label` / `text` / `content` / `beschreibung` | nein | nur Anzeige, kein Wert |
+| `input` / `inputs` | nein | `"id"` oder `"id" labeled "Label" [with placeholder "…"] [with default "…"]` |
+| `dropdown` / `dropdowns` | nein | `"id" [labeled "Label"] with options "A", "B" [with default 0]` (Default = Index) |
+| `toggle` / `toggles` | nein | `"id" [labeled "Label"] [with default true/false]` |
+| `slider` / `sliders` | nein | `"id" [labeled "Label"] from 0 to 10 [with step 1] [with default 5]` |
+
+`form value of "id"` liefert immer einen String: Input-Text, Dropdown-**Index** (`"0"`, `"1"`, …), Toggle (`"true"`/`"false"`), Slider (Zahl als Text, z. B. `"5"`).
 
 ## Einzeiler
 
@@ -117,8 +132,11 @@ on bgb modal form with id "ask":
     if form yes is true:
         send "Ja" to player
 
-on bgb custom form with id "profil":
-    set {_name} to form value of "Name"
+on bgb custom form with id "settings":
+    set {_name} to form value of "name"
+    set {_color} to form value of "color"   # Index als Text, z. B. "0"
+    set {_notify} to form value of "notify" # "true" / "false"
+    set {_volume} to form value of "volume" # z. B. "5"
 ```
 
 | Expression | Form |
@@ -126,7 +144,7 @@ on bgb custom form with id "profil":
 | `form button` | Simple, Modal |
 | `form index` | Simple |
 | `form yes` | Modal |
-| `form value of "Label"` | Custom |
+| `form value of "id"` | Custom (String; Dropdown = Index) |
 | `form id` | alle |
 | `form title` | alle |
 

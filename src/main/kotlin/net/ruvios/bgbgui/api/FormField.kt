@@ -102,7 +102,17 @@ class FormValues internal constructor(
 ) {
 
     fun getString(id: String): String {
-        return values[id]?.toString() ?: ""
+        return when (val value = values[id]) {
+            null -> ""
+            is String -> value
+            is Boolean -> value.toString()
+            is Int -> value.toString()
+            is Number -> {
+                val d = value.toDouble()
+                if (d == d.toLong().toDouble()) d.toLong().toString() else value.toString()
+            }
+            else -> value.toString()
+        }
     }
 
     fun getInt(id: String): Int {
@@ -110,12 +120,18 @@ class FormValues internal constructor(
             is Int -> value
             is Number -> value.toInt()
             is String -> value.toIntOrNull() ?: 0
+            is Boolean -> if (value) 1 else 0
             else -> 0
         }
     }
 
     fun getBoolean(id: String): Boolean {
-        return values[id] as? Boolean ?: false
+        return when (val value = values[id]) {
+            is Boolean -> value
+            is String -> value.equals("true", ignoreCase = true) || value == "1"
+            is Number -> value.toInt() != 0
+            else -> false
+        }
     }
 
     fun getFloat(id: String): Float {

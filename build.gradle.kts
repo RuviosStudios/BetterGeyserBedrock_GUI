@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "net.ruvios"
-version = "0.1.1"
+version = "0.1.2"
 
 base {
     archivesName.set("bgb_gui")

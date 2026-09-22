@@ -29,7 +29,7 @@ Paper/Folia-API für Geyser/Floodgate-Forms (Simple, Modal, Custom). Andere Plug
 | Skript (optional) | 2.12.x | 2.12.2 |
 | skript-reflect (optional) | zur Skript-Version | für Floodgate-`import:` |
 
-Plugin-Name auf dem Server: **`BGB_GUI`**. JAR: `bgb_gui-0.1.0.jar`.
+Plugin-Name auf dem Server: **`BGB_GUI`**. JAR: `bgb_gui-0.1.2.jar`.
 
 ## Dokumentation
 

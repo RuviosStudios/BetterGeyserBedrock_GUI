@@ -8,7 +8,7 @@
 | Paper oder Folia | 1.21.11 | 26.3 | ja |
 | Floodgate | 2.2.x | 2.2.4-SNAPSHOT | ja (Forms) |
 | Geyser-Spigot | passend zu Floodgate | aktuell | empfohlen |
-| BGB_GUI | 0.1.0 | 0.1.0 | ja |
+| BGB_GUI | 0.1.2 | 0.1.2 | ja |
 | Skript | 2.12.x | 2.12.2 | nur für `.sk` |
 | skript-reflect | zur Skript-Version | aktuell | nur für Floodgate-`import:` in Skript |
 
@@ -18,7 +18,7 @@ BGB_GUI ist **folia-supported**. Ohne Floodgate startet das Plugin, Forms schlag
 
 1. Paper/Folia **1.21.11–26.3** mit **Java 25** (entwickelt/getestet gegen Paper 26.2).
 2. [Geyser](https://geysermc.org/) und [Floodgate](https://geysermc.org/download) in `plugins/` legen (Key von Floodgate mit Geyser teilen).
-3. [BGB_GUI-Release](https://github.com/RuviosStudios/BetterGeyserBedrock_GUI/releases) herunterladen → `plugins/bgb_gui-0.1.0.jar`.
+3. [BGB_GUI-Release](https://github.com/RuviosStudios/BetterGeyserBedrock_GUI/releases) herunterladen → `plugins/bgb_gui-0.1.2.jar`.
 4. Optional: Skript 2.12.x (+ skript-reflect), dann `.sk` nach `plugins/Skript/scripts/`.
 5. Server starten. In der Konsole sollte `BGB_GUI` laden.
 
@@ -52,9 +52,9 @@ JAR vom Release oder lokal gebaut:
 
 ```kotlin
 dependencies {
-    compileOnly(files("libs/bgb_gui-0.1.0.jar"))
+    compileOnly(files("libs/bgb_gui-0.1.2.jar"))
     // oder relativ zum BGB_GUI-Repo:
-    // compileOnly(files("../GeyserBedrockGUI/build/libs/bgb_gui-0.1.0.jar"))
+    // compileOnly(files("../GeyserBedrockGUI/build/libs/bgb_gui-0.1.2.jar"))
 }
 ```
 

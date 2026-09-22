@@ -80,20 +80,26 @@ on bgb modal form with id "heal":
     else:
         send "{@prefix} &7Nicht geheilt." to player
 
-# --- Custom Form: Name + Stadt anwenden ---
-command /bgbprofil:
+# --- Custom Form: Einstellungen (label/input/dropdown/toggle/slider) ---
+# Kurzform input: "Name" bleibt gültig (id = label).
+command /bgbsettings:
     permission: bgbgui.example
     trigger:
         if isBedrock(player) is true:
             open custom form to player:
-                id: "profil"
-                title: "Profil"
-                input: "Name"
-                input: "Stadt"
+                id: "settings"
+                title: "Einstellungen"
+                label: "Bitte ausfüllen"
+                input: "name" labeled "Name" with placeholder "Spieler"
+                dropdown: "color" labeled "Farbe" with options "Rot", "Grün" and "Blau"
+                toggle: "notify" labeled "Benachrichtigungen" with default true
+                slider: "volume" labeled "Lautstärke" from 0 to 10 with default 5
 
-on bgb custom form with id "profil":
-    set {_name} to form value of "Name"
-    set {_stadt} to form value of "Stadt"
+on bgb custom form with id "settings":
+    set {_name} to form value of "name"
+    set {_color} to form value of "color"
+    set {_notify} to form value of "notify"
+    set {_volume} to form value of "volume"
 
     if {_name} is not set:
         send "{@prefix} &cBitte einen Namen eintragen." to player
@@ -101,28 +107,29 @@ on bgb custom form with id "profil":
     if {_name} is "":
         send "{@prefix} &cBitte einen Namen eintragen." to player
         stop
-    if {_stadt} is not set:
-        send "{@prefix} &cBitte eine Stadt eintragen." to player
-        stop
-    if {_stadt} is "":
-        send "{@prefix} &cBitte eine Stadt eintragen." to player
-        stop
+
+    set {_colors::0} to "Rot"
+    set {_colors::1} to "Grün"
+    set {_colors::2} to "Blau"
+    set {_colorName} to {_colors::%{_color}%}
+    if {_colorName} is not set:
+        set {_colorName} to "unbekannt"
 
     set {bgb::name::%uuid of player%} to {_name}
-    set {bgb::stadt::%uuid of player%} to {_stadt}
+    set {bgb::color::%uuid of player%} to {_colorName}
+    set {bgb::notify::%uuid of player%} to {_notify}
+    set {bgb::volume::%uuid of player%} to {_volume}
 
     set display name of player to "&e%{_name}%"
     set tab list name of player to "&e%{_name}%"
 
-    give 1 paper named "&6Visitenkarte" with lore "&7Name: &f%{_name}%" and "&7Stadt: &f%{_stadt}%" to player
-
-    send title "&e%{_name}%" with subtitle "&7aus &f%{_stadt}%" to player for 3 seconds
-    send "{@prefix} &aProfil gesetzt: &e%{_name}% &7aus &e%{_stadt}%&a. Nickname und Visitenkarte sind aktiv." to player
+    send title "&e%{_name}%" with subtitle "&7%{_colorName}% · Lautstärke %{_volume}%" to player for 3 seconds
+    send "{@prefix} &aGespeichert: &e%{_name}%&a, Farbe &e%{_colorName}%&a (Index %{_color}%), Notify &e%{_notify}%&a, Volume &e%{_volume}%&a." to player
 
 command /bgbmeinprofil:
     permission: bgbgui.example
     trigger:
         if {bgb::name::%uuid of player%} is not set:
-            send "{@prefix} &cNoch kein Profil. Nutze &e/bgbprofil" to player
+            send "{@prefix} &cNoch kein Profil. Nutze &e/bgbsettings" to player
             stop
-        send "{@prefix} &fName: &e%{bgb::name::%uuid of player%}%&f | Stadt: &e%{bgb::stadt::%uuid of player%}%" to player
+        send "{@prefix} &fName: &e%{bgb::name::%uuid of player%}%&f | Farbe: &e%{bgb::color::%uuid of player%}%&f | Notify: &e%{bgb::notify::%uuid of player%}%&f | Volume: &e%{bgb::volume::%uuid of player%}%" to player
